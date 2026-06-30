@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAuthContext } from '../../contexts/AuthContext'
 
 export default function Layout({ children }) {
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const { currentUser, logout } = useAuthContext()
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-ink-950)' }}>
@@ -45,6 +47,21 @@ export default function Layout({ children }) {
             >
               Prologue
             </Link>
+            <div className="flex items-center gap-3" style={{ borderLeft: '1px solid var(--color-ink-700)', paddingLeft: '1.25rem' }}>
+              <span
+                className="text-xs font-medium px-2 py-1 rounded"
+                style={{ backgroundColor: 'var(--color-ink-800)', color: 'var(--color-amber-300)', border: '1px solid var(--color-ink-700)' }}
+              >
+                {currentUser}
+              </span>
+              <button
+                onClick={logout}
+                className="text-xs transition-colors hover:opacity-80"
+                style={{ color: 'var(--color-ink-400)' }}
+              >
+                Log out
+              </button>
+            </div>
           </div>
         </div>
       </nav>

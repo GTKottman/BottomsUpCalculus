@@ -1,23 +1,5 @@
 import { useState, useCallback } from 'react'
-
-const STORAGE_KEY = 'calc1_progress'
-
-function loadProgress() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : {}
-  } catch {
-    return {}
-  }
-}
-
-function saveProgress(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // localStorage unavailable
-  }
-}
+import { useAuthContext } from '../contexts/AuthContext'
 
 /**
  * Shape of progress data:
@@ -26,17 +8,37 @@ function saveProgress(data) {
  *   chapter_1: { sectionsCompleted: ['intro', 'slopes'], quizPassed: false, completed: false },
  *   ...
  * }
+ *
+ * Stored under the key `calc1_progress_<username>` so each account has isolated progress.
  */
 export default function useProgress() {
-  const [progress, setProgress] = useState(loadProgress)
+  const { currentUser } = useAuthContext()
+  const storageKey = `calc1_progress_${currentUser}`
+
+  const [progress, setProgress] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      return raw ? JSON.parse(raw) : {}
+    } catch {
+      return {}
+    }
+  })
+
+  const save = useCallback((data) => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(data))
+    } catch {
+      // localStorage unavailable
+    }
+  }, [storageKey])
 
   const markPrologueVisited = useCallback(() => {
     setProgress(prev => {
       const next = { ...prev, prologue: { ...prev.prologue, visited: true } }
-      saveProgress(next)
+      save(next)
       return next
     })
-  }, [])
+  }, [save])
 
   const markSectionComplete = useCallback((chapterId, sectionId) => {
     setProgress(prev => {
@@ -50,10 +52,10 @@ export default function useProgress() {
           sectionsCompleted: [...sections, sectionId],
         },
       }
-      saveProgress(next)
+      save(next)
       return next
     })
-  }, [])
+  }, [save])
 
   const markQuizPassed = useCallback((chapterId) => {
     setProgress(prev => {
@@ -62,10 +64,10 @@ export default function useProgress() {
         ...prev,
         [chapterId]: { ...chapter, quizPassed: true, completed: true },
       }
-      saveProgress(next)
+      save(next)
       return next
     })
-  }, [])
+  }, [save])
 
   const isChapterUnlocked = useCallback((chapterId, allChapters) => {
     const idx = allChapters.findIndex(c => c.id === chapterId)
@@ -84,9 +86,9 @@ export default function useProgress() {
   const totalCompleted = Object.values(progress).filter(v => v.completed).length
 
   const resetProgress = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(storageKey)
     setProgress({})
-  }, [])
+  }, [storageKey])
 
   return {
     progress,
