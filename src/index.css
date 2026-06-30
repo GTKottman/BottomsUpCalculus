@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-ink-950: #0a0d14;
+  --color-ink-900: #0f1520;
+  --color-ink-800: #161d2e;
+  --color-ink-700: #1e2840;
+  --color-ink-600: #2a3554;
+  --color-ink-500: #3b4d74;
+  --color-ink-400: #5a6f9a;
+  --color-ink-300: #8395b8;
+  --color-ink-200: #b3bdd4;
+  --color-ink-100: #dde1ec;
+  --color-ink-50: #f0f2f7;
+
+  --color-amber-950: #2d1500;
+  --color-amber-900: #4a2400;
+  --color-amber-800: #6b3500;
+  --color-amber-700: #924a00;
+  --color-amber-600: #c06200;
+  --color-amber-500: #f07d00;
+  --color-amber-400: #f5a030;
+  --color-amber-300: #f8bf6a;
+  --color-amber-200: #fad89f;
+  --color-amber-100: #fcefd4;
+  --color-amber-50: #fef9f0;
+
+  --color-cyan-400: #22d3ee;
+  --color-cyan-300: #67e8f9;
+  --color-lime-400: #a3e635;
+
+  --color-paper-dark: #1a1510;
+  --color-paper-mid: #2a2018;
+  --color-paper-light: #3d3025;
+  --color-paper-text: #e8d9c0;
+  --color-paper-faded: #a08060;
+
+  --font-serif: 'Lora', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-handwritten: 'Caveat', cursive;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-ink-100);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* KaTeX overrides for dark backgrounds */
+.katex { color: inherit; }
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-ink-900); }
+::-webkit-scrollbar-thumb { background: var(--color-ink-600); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-amber-600); }
+
+/* Range input global style */
+input[type='range'] {
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Focus ring */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-amber-400);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Smooth opacity transitions on all interactive elements */
+button, a { transition: opacity 0.15s ease; }
+
+/* Math block overrides */
+.katex-display > .katex {
+  font-size: 1.1em;
+}
